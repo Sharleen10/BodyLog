@@ -3,6 +3,7 @@
 import { signIn } from 'next-auth/react'
 import { Button } from '@/components/ui/Button'
 import { useState } from 'react'
+import { useToast } from '@/hooks/useToast'
 
 const providers = [
   {
@@ -42,13 +43,18 @@ const providers = [
 
 export default function SocialLoginButtons() {
   const [loading, setLoading] = useState<string | null>(null)
+  const { toast } = useToast()
 
   const handleSocialLogin = async (provider: string) => {
     try {
       setLoading(provider)
       await signIn(provider, { callbackUrl: '/dashboard' })
     } catch (error) {
-      console.error(`${provider} login failed:`, error)
+      toast({
+        title: 'Error',
+        description: `${provider} login failed`,
+        variant: 'destructive',
+      })
     } finally {
       setLoading(null)
     }

@@ -4,25 +4,24 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
-import { signIn } from 'next-auth/react'
+import { loginSchema } from '@/lib/utils/validation'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/Card'
 import Link from 'next/link'
 import SocialLoginButtons from './SocialLoginButtons'
+import { authApi } from '@/lib/api/endpoints'
+import { useToast } from '@/hooks/useToast'
 
-const loginSchema = z.object({
-  email: z.string().email('Invalid email address'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
-})
-
-type LoginFormData = z.infer<typeof loginSchema>
+type LoginFormData = {
+  email: string
+  password: string
+}
 
 export default function LoginForm() {
   const router = useRouter()
+  const { toast } = useToast()
   const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
 
   const {
     register,
@@ -34,23 +33,26 @@ export default function LoginForm() {
 
   const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true)
-    setError(null)
-
     try {
-      const result = await signIn('credentials', {
-        email: data.email,
-        password: data.password,
-        redirect: false,
+      const response = await authApi.login(data.email, data.password)
+      const { token, refreshToken, user } = response.data.data!
+      
+      localStorage.setItem('token', token)
+      localStorage.setItem('refreshToken', refreshToken)
+      
+      toast({
+        title: 'Welcome back!',
+        description: `Logged in as ${user.name}`,
       })
-
-      if (result?.error) {
-        setError('Invalid email or password')
-      } else {
-        router.push('/dashboard')
-        router.refresh()
-      }
-    } catch (error) {
-      setError('An error occurred. Please try again.')
+      
+      router.push('/dashboard')
+      router.refresh()
+    } catch (error: any) {
+      toast({
+        title: 'Error',
+        description: error.response?.data?.message || 'Failed to login',
+        variant: 'destructive',
+      })
     } finally {
       setIsLoading(false)
     }
@@ -82,12 +84,6 @@ export default function LoginForm() {
             error={errors.password?.message}
             {...register('password')}
           />
-          
-          {error && (
-            <div className="p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-              {error}
-            </div>
-          )}
 
           <Button
             type="submit"
