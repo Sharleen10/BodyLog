@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { signIn } from 'next-auth/react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { loginSchema } from '@/lib/utils/validation'
@@ -10,7 +11,6 @@ import { Input } from '@/components/ui/Input'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/Card'
 import Link from 'next/link'
 import SocialLoginButtons from './SocialLoginButtons'
-import { authApi } from '@/lib/api/endpoints'
 import { useToast } from '@/hooks/useToast'
 
 type LoginFormData = {
@@ -20,6 +20,7 @@ type LoginFormData = {
 
 export default function LoginForm() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const { toast } = useToast()
   const [isLoading, setIsLoading] = useState(false)
 
@@ -34,23 +35,36 @@ export default function LoginForm() {
   const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true)
     try {
-      const response = await authApi.login(data.email, data.password)
-      const { token, refreshToken, user } = response.data.data!
-      
-      localStorage.setItem('token', token)
-      localStorage.setItem('refreshToken', refreshToken)
-      
-      toast({
-        title: 'Welcome back!',
-        description: `Logged in as ${user.name}`,
+      const result = await signIn('credentials', {
+        email: data.email,
+        password: data.password,
+        redirect: false,
       })
-      
-      router.push('/dashboard')
-      router.refresh()
+
+      if (result?.error) {
+        toast({
+          title: 'Error',
+          description: result.error === 'CredentialsSignin'
+            ? 'Invalid email or password'
+            : result.error,
+          variant: 'destructive',
+        })
+        return
+      }
+
+      if (result?.ok) {
+        toast({
+          title: 'Welcome back!',
+          description: 'Logged in successfully',
+        })
+        const from = searchParams.get('from') || '/dashboard'
+        router.push(from)
+        router.refresh()
+      }
     } catch (error: any) {
       toast({
         title: 'Error',
-        description: error.response?.data?.message || 'Failed to login',
+        description: 'Something went wrong. Please try again.',
         variant: 'destructive',
       })
     } finally {
@@ -84,12 +98,7 @@ export default function LoginForm() {
             error={errors.password?.message}
             {...register('password')}
           />
-
-          <Button
-            type="submit"
-            className="w-full"
-            isLoading={isLoading}
-          >
+          <Button type="submit" className="w-full" isLoading={isLoading}>
             Sign In
           </Button>
         </form>
@@ -110,10 +119,7 @@ export default function LoginForm() {
       <CardFooter className="flex justify-center">
         <p className="text-sm text-muted-foreground">
           Don't have an account?{' '}
-          <Link
-            href="/register"
-            className="text-primary hover:underline font-medium"
-          >
+          <Link href="/register" className="text-primary hover:underline font-medium">
             Sign up
           </Link>
         </p>

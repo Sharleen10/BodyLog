@@ -2,17 +2,18 @@ import { withAuth } from 'next-auth/middleware'
 import { NextResponse } from 'next/server'
 
 export default withAuth(
-  function middleware(req) {
+  function proxy(req) {
     const token = req.nextauth.token
     const isAuth = !!token
-    const isAuthPage = req.nextUrl.pathname.startsWith('/login') || 
-                       req.nextUrl.pathname.startsWith('/register')
+    const isAuthPage =
+      req.nextUrl.pathname.startsWith('/login') ||
+      req.nextUrl.pathname.startsWith('/register')
 
     if (isAuthPage) {
       if (isAuth) {
         return NextResponse.redirect(new URL('/dashboard', req.url))
       }
-      return null
+      return NextResponse.next()
     }
 
     if (!isAuth) {
@@ -25,10 +26,12 @@ export default withAuth(
         new URL(`/login?from=${encodeURIComponent(from)}`, req.url)
       )
     }
+
+    return NextResponse.next()
   },
   {
     callbacks: {
-      authorized: ({ token }) => !!token,
+      authorized: () => true,
     },
   }
 )
@@ -38,7 +41,6 @@ export const config = {
     '/dashboard/:path*',
     '/measurements/:path*',
     '/profile/:path*',
-    '/login',
-    '/register',
+    // ✅ Removed /login and /register — these caused the infinite redirect loop
   ],
 }

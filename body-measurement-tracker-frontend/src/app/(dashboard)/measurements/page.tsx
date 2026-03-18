@@ -6,7 +6,7 @@ import MeasurementList from '@/components/dashboard/MeasurementList'
 import MeasurementForm from '@/components/dashboard/MeasurementForm'
 import { Button } from '@/components/ui/Button'
 import { PlusIcon } from 'lucide-react'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/AlertDialog'
+import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/AlertDialog'
 import { Measurement, MeasurementFormData } from '@/types'
 
 export default function MeasurementsPage() {
@@ -55,13 +55,13 @@ export default function MeasurementsPage() {
         isLoading={isLoading}
       />
 
-      <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>
+      <AlertDialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+        <AlertDialogContent className="max-w-2xl">
+          <AlertDialogHeader>
+            <AlertDialogTitle>
               {editingMeasurement ? 'Edit Measurement' : 'Add New Measurement'}
-            </DialogTitle>
-          </DialogHeader>
+            </AlertDialogTitle>
+          </AlertDialogHeader>
           <MeasurementForm
             initialData={editingMeasurement || undefined}
             onSubmit={handleSubmit}
@@ -70,8 +70,8 @@ export default function MeasurementsPage() {
               setEditingMeasurement(null)
             }}
           />
-        </DialogContent>
-      </Dialog>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }
