@@ -12,7 +12,7 @@ if (!fs.existsSync(uploadDir)) {
 
 const storage = multer.memoryStorage();
 
-const fileFilter = (req: any, file: any, cb: any) => {
+const fileFilter = (_req: any, file: any, cb: any) => {
   const allowedTypes = process.env.ALLOWED_FILE_TYPES?.split(',') || ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
   
   if (allowedTypes.includes(file.mimetype)) {
@@ -31,7 +31,7 @@ const upload = multer({
 });
 
 // Image processing middleware
-export const processImage = async (req: any, res: any, next: any) => {
+export const processImage = async (req: any, _res: any, next: any) => {
   if (!req.file) {
     return next();
   }

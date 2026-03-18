@@ -15,7 +15,7 @@ const authService = AuthService.getInstance()
 export const register = catchAsync(async (
   req: Request<{}, {}, RegisterRequestBody>,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ) => {
   const { email, password, name } = req.body
 
@@ -31,7 +31,7 @@ export const register = catchAsync(async (
 export const login = catchAsync(async (
   req: Request<{}, {}, LoginRequestBody>,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ) => {
   const { email, password } = req.body
 
@@ -47,7 +47,7 @@ export const login = catchAsync(async (
 export const refreshToken = catchAsync(async (
   req: Request,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ) => {
   const { refreshToken } = req.body
 
@@ -63,7 +63,7 @@ export const refreshToken = catchAsync(async (
 export const logout = catchAsync(async (
   req: AuthRequest,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ) => {
   const { refreshToken } = req.body
   const userId = req.user!.id
@@ -76,7 +76,7 @@ export const logout = catchAsync(async (
 export const logoutAll = catchAsync(async (
   req: AuthRequest,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ) => {
   const userId = req.user!.id
 
@@ -88,7 +88,7 @@ export const logoutAll = catchAsync(async (
 export const requestPasswordReset = catchAsync(async (
   req: Request,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ) => {
   const { email } = req.body
 
@@ -104,7 +104,7 @@ export const requestPasswordReset = catchAsync(async (
 export const resetPassword = catchAsync(async (
   req: Request,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ) => {
   const { email, token, newPassword } = req.body
 
@@ -120,17 +120,15 @@ export const resetPassword = catchAsync(async (
 export const getCurrentUser = catchAsync(async (
   req: AuthRequest,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ) => {
   sendResponse(res, req.user, 'Current user retrieved successfully')
 })
 
-
-// New Supabase-specific auth handler
 export const supabaseAuth = catchAsync(async (
   req: Request,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ) => {
   const { access_token } = req.body
 
@@ -138,17 +136,14 @@ export const supabaseAuth = catchAsync(async (
     throw new AppError('Access token is required', 400)
   }
 
-  // Verify the Supabase token
   const supabaseUser = await authService.verifySupabaseToken(access_token)
-  
+
   if (!supabaseUser) {
     throw new AppError('Invalid Supabase token', 401)
   }
 
-  // Sync user to local database
   await authService.syncSupabaseUser(supabaseUser.id)
 
-  // Find or create user in local database
   const user = await prisma.user.findFirst({
     where: {
       OR: [
@@ -162,14 +157,12 @@ export const supabaseAuth = catchAsync(async (
     throw new AppError('User not found', 404)
   }
 
-  // Generate tokens
   const { token, refreshToken } = await authService.generateTokens(user)
   await authService.saveRefreshToken(user.id, refreshToken)
 
   sendResponse(res, { user, token, refreshToken }, 'Authenticated with Supabase successfully')
 })
 
-// Update OAuth callbacks to also store in Supabase if desired
 export const googleAuthCallback = catchAsync(async (
   req: Request,
   res: Response,
@@ -180,7 +173,6 @@ export const googleAuthCallback = catchAsync(async (
       return res.redirect(`${process.env.FRONTEND_URL}/login?error=oauth_failed`)
     }
 
-    // Get user info from profile
     const email = profile.emails?.[0]?.value
     const name = profile.displayName
     const image = profile.photos?.[0]?.value
@@ -189,10 +181,8 @@ export const googleAuthCallback = catchAsync(async (
       return res.redirect(`${process.env.FRONTEND_URL}/login?error=no_email`)
     }
 
-    // Use social login method
     const result = await authService.socialLogin('google', profile.id, email, name, image)
 
-    // Optional: Also create in Supabase
     try {
       await supabase.auth.admin.createUser({
         email,
@@ -203,21 +193,42 @@ export const googleAuthCallback = catchAsync(async (
       logger.warn('Could not create Supabase user:', supabaseError)
     }
 
-    // Redirect to frontend with tokens
     res.redirect(
       `${process.env.FRONTEND_URL}/oauth-callback?token=${result.token}&refreshToken=${result.refreshToken}`
     )
   })(req, res, next)
 })
 
-export function facebookAuthCallback(arg0: string, facebookAuthCallback: any) {
-  throw new Error('Function not implemented.')
-}
-export function facebookAuth(arg0: string, facebookAuth: any) {
-  throw new Error('Function not implemented.')
+export const facebookAuthCallback = catchAsync(async (
+  req: Request,
+  res: Response,
+  _next: NextFunction
+) => {
+  passport.authenticate('facebook', { session: false }, async (err: any, profile: any) => {
+    if (err || !profile) {
+      return res.redirect(`${process.env.FRONTEND_URL}/login?error=oauth_failed`)
+    }
+
+    const email = profile.emails?.[0]?.value
+    const name = profile.displayName
+    const image = profile.photos?.[0]?.value
+
+    if (!email) {
+      return res.redirect(`${process.env.FRONTEND_URL}/login?error=no_email`)
+    }
+
+    const result = await authService.socialLogin('facebook', profile.id, email, name, image)
+
+    res.redirect(
+      `${process.env.FRONTEND_URL}/oauth-callback?token=${result.token}&refreshToken=${result.refreshToken}`
+    )
+  })(req, res, _next)
+})
+
+export const facebookAuth = (req: Request, res: Response, next: NextFunction) => {
+  passport.authenticate('facebook', { scope: ['email'] })(req, res, next)
 }
 
-export function googleAuth(arg0: string, googleAuth: any) {
-  throw new Error('Function not implemented.')
+export const googleAuth = (req: Request, res: Response, next: NextFunction) => {
+  passport.authenticate('google', { scope: ['profile', 'email'] })(req, res, next)
 }
-

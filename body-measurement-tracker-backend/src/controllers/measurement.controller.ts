@@ -2,16 +2,25 @@ import { Request, Response, NextFunction } from 'express'
 import { MeasurementService } from '../services/measurement.service'
 import { catchAsync } from '../utils/catchAsync'
 import { AppError } from '../utils/AppError'
-import { AuthRequest, MeasurementRequestBody, NumericMeasurementField } from '../types'
+import { MeasurementRequestBody } from '../types'
 import { sendResponse } from '../utils/helpers'
 import { constants } from '../config/constants'
+
+type NumericMeasurementField = 'weight' | 'chest' | 'waist' | 'hips' | 'thighs' | 'biceps' | 'bodyFat'
+
+const VALID_FIELDS: NumericMeasurementField[] = [
+  'weight', 'chest', 'waist', 'hips', 'thighs', 'biceps', 'bodyFat'
+]
+
+const isValidField = (field: string): field is NumericMeasurementField =>
+  VALID_FIELDS.includes(field as NumericMeasurementField)
 
 const measurementService = MeasurementService.getInstance()
 
 export const createMeasurement = catchAsync(async (
-  req: AuthRequest,
+  req: Request,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ) => {
   const userId = req.user!.id
   const data: MeasurementRequestBody = req.body
@@ -22,9 +31,9 @@ export const createMeasurement = catchAsync(async (
 })
 
 export const getMeasurements = catchAsync(async (
-  req: AuthRequest,
+  req: Request,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ) => {
   const userId = req.user!.id
   const { page, limit, sortBy, sortOrder, startDate, endDate } = req.query
@@ -47,9 +56,9 @@ export const getMeasurements = catchAsync(async (
 })
 
 export const getMeasurementById = catchAsync(async (
-  req: AuthRequest,
+  req: Request,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ) => {
   const userId = req.user!.id
   const { id } = req.params
@@ -60,9 +69,9 @@ export const getMeasurementById = catchAsync(async (
 })
 
 export const updateMeasurement = catchAsync(async (
-  req: AuthRequest,
+  req: Request,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ) => {
   const userId = req.user!.id
   const { id } = req.params
@@ -74,9 +83,9 @@ export const updateMeasurement = catchAsync(async (
 })
 
 export const deleteMeasurement = catchAsync(async (
-  req: AuthRequest,
+  req: Request,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ) => {
   const userId = req.user!.id
   const { id } = req.params
@@ -87,9 +96,9 @@ export const deleteMeasurement = catchAsync(async (
 })
 
 export const getMeasurementStats = catchAsync(async (
-  req: AuthRequest,
+  req: Request,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ) => {
   const userId = req.user!.id
 
@@ -99,20 +108,23 @@ export const getMeasurementStats = catchAsync(async (
 })
 
 export const getProgressData = catchAsync(async (
-  req: AuthRequest,
+  req: Request,
   res: Response,
   next: NextFunction
 ) => {
   const userId = req.user!.id
   const { fields } = req.query
 
-  // Convert query string to array of NumericMeasurementField safely
-  const fieldArray: NumericMeasurementField[] = (fields
-    ? (fields as string).split(',')
+  const fieldArray: NumericMeasurementField[] = fields
+    ? (fields as string).split(',').filter(isValidField)
     : ['weight']
-  ).filter((f): f is NumericMeasurementField => 
-    ['weight', 'chest', 'waist', 'hips', 'thighs', 'biceps', 'bodyFat'].includes(f)
-  )
+
+  if (fieldArray.length === 0) {
+    return next(new AppError(
+      `Invalid fields. Valid options are: ${VALID_FIELDS.join(', ')}`,
+      constants.HTTP_STATUS.BAD_REQUEST
+    ))
+  }
 
   const progress = await measurementService.getProgressData(userId, fieldArray)
 
@@ -120,7 +132,7 @@ export const getProgressData = catchAsync(async (
 })
 
 export const bulkCreateMeasurements = catchAsync(async (
-  req: AuthRequest,
+  req: Request,
   res: Response,
   next: NextFunction
 ) => {
@@ -128,7 +140,10 @@ export const bulkCreateMeasurements = catchAsync(async (
   const { measurements } = req.body
 
   if (!Array.isArray(measurements) || measurements.length === 0) {
-    throw new AppError('Please provide an array of measurements', constants.HTTP_STATUS.BAD_REQUEST)
+    return next(new AppError(
+      'Please provide an array of measurements',
+      constants.HTTP_STATUS.BAD_REQUEST
+    ))
   }
 
   const created = await measurementService.bulkCreateMeasurements(userId, measurements)

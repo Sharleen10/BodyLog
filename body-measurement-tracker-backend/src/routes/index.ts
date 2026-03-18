@@ -11,7 +11,7 @@ router.use('/measurements', measurementRoutes)
 router.use('/users', userRoutes)
 
 // API info
-router.get('/', (req, res) => {
+router.get('/', (_req, res) => {
   res.json({
     name: 'Body Measurement Tracker API',
     version: '1.0.0',

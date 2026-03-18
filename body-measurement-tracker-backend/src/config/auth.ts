@@ -51,7 +51,7 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
         callbackURL: process.env.GOOGLE_CALLBACK_URL!,
       },
-      async (accessToken, refreshToken, profile, done) => {
+      async (_accessToken, _refreshToken, profile, done) => {
         try {
           let user = await prisma.user.findFirst({
             where: {
@@ -63,7 +63,6 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
           })
 
           if (!user) {
-            // Create new user
             user = await prisma.user.create({
               data: {
                 email: profile.emails?.[0]?.value!,
@@ -95,7 +94,7 @@ if (process.env.FACEBOOK_APP_ID && process.env.FACEBOOK_APP_SECRET) {
         callbackURL: process.env.FACEBOOK_CALLBACK_URL!,
         profileFields: ['id', 'emails', 'name', 'photos'],
       },
-      async (accessToken, refreshToken, profile, done) => {
+      async (_accessToken, _refreshToken, profile, done) => {
         try {
           let user = await prisma.user.findFirst({
             where: {
@@ -107,7 +106,6 @@ if (process.env.FACEBOOK_APP_ID && process.env.FACEBOOK_APP_SECRET) {
           })
 
           if (!user) {
-            // Create new user
             user = await prisma.user.create({
               data: {
                 email: profile.emails?.[0]?.value!,

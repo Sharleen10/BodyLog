@@ -40,7 +40,11 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }))
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'))
 } else {
-  app.use(morgan('combined', { stream: { write: (message) => logger.info(message.trim()) } }))
+  app.use(morgan('combined', { 
+    stream: { 
+      write: (message) => logger.info(message.trim()) 
+    } 
+  }))
 }
 
 // Rate limiting
@@ -55,8 +59,8 @@ app.use(passport.initialize())
 // API routes
 app.use('/api', routes)
 
-// Health check
-app.get('/health', (req, res) => {
+// Health check (FIXED: _req instead of req)
+app.get('/health', (_req, res) => {
   res.status(200).json({ 
     status: 'OK', 
     timestamp: new Date().toISOString(),
@@ -73,7 +77,7 @@ app.use('*', (req, res) => {
   })
 })
 
-// Error handling middleware (should be last)
+// Error handling middleware (must be last)
 app.use(errorHandler)
 
 export default app

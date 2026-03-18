@@ -15,7 +15,7 @@ export const connectDB = async (): Promise<void> => {
     logger.info('✅ Database connected successfully via Prisma')
     
     // Test Supabase connection
-    const { data, error } = await supabaseAdmin.auth.getSession()
+    const { error } = await supabaseAdmin.auth.getSession()
     if (error) {
       logger.warn('⚠️ Supabase connection warning:', error.message)
     } else {
@@ -27,7 +27,7 @@ export const connectDB = async (): Promise<void> => {
   }
 }
 
-export const disconnectDB = async (): Promise<void> {
+export const disconnectDB = async (): Promise<void> => {
   try {
     await prisma.$disconnect()
     logger.info('Database disconnected')

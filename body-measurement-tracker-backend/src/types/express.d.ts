@@ -1,11 +1,13 @@
 declare global {
   namespace Express {
+    interface User {
+      id: string
+      email: string
+      name: string
+    }
+
     interface Request {
-      user?: {
-        id: string
-        email: string
-        name: string
-      }
+      user?: User
       file?: Express.Multer.File
       files?: Express.Multer.File[]
     }

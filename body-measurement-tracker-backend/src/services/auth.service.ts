@@ -20,7 +20,6 @@ export class AuthService {
   }
 
   async register(email: string, password: string, name: string): Promise<{ user: Partial<User>; token: string; refreshToken: string }> {
-    // Check if user exists in our database
     const existingUser = await prisma.user.findUnique({
       where: { email }
     })
@@ -29,7 +28,6 @@ export class AuthService {
       throw new AppError('User already exists with this email', 400)
     }
 
-    // Create user in Supabase Auth (optional - you can use this or keep your own JWT)
     const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
       email,
       password,
@@ -39,20 +37,17 @@ export class AuthService {
 
     if (authError) {
       logger.error('Supabase user creation error:', authError)
-      // Continue with local user creation even if Supabase fails
     }
 
-    // Hash password for local storage
     const hashedPassword = await bcrypt.hash(password, 12)
 
-    // Create user in our database
     const user = await prisma.user.create({
       data: {
         email,
         password: hashedPassword,
         name,
         provider: 'local',
-        providerId: authData?.user?.id, // Store Supabase user ID if available
+        providerId: authData?.user?.id,
       },
       select: {
         id: true,
@@ -65,17 +60,13 @@ export class AuthService {
 
     logger.info(`New user registered: ${email}`)
 
-    // Generate tokens
     const { token, refreshToken } = this.generateTokens(user)
-
-    // Save refresh token
     await this.saveRefreshToken(user.id, refreshToken)
 
     return { user, token, refreshToken }
   }
 
   async login(email: string, password: string): Promise<{ user: Partial<User>; token: string; refreshToken: string }> {
-    // Find user in our database
     const user = await prisma.user.findUnique({
       where: { email }
     })
@@ -84,37 +75,30 @@ export class AuthService {
       throw new AppError('Invalid credentials', 401)
     }
 
-    // Check if user is from OAuth
     if (user.provider !== 'local') {
       throw new AppError(`This account uses ${user.provider} login. Please log in with ${user.provider}.`, 400)
     }
 
-    // Verify password
     const isValidPassword = await bcrypt.compare(password, user.password!)
     if (!isValidPassword) {
       throw new AppError('Invalid credentials', 401)
     }
 
     // Optional: Verify with Supabase Auth
-    const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+    const { error: authError } = await supabase.auth.signInWithPassword({
       email,
       password
     })
 
     if (authError) {
       logger.warn('Supabase auth warning:', authError.message)
-      // Continue with local auth even if Supabase fails
     }
 
     logger.info(`User logged in: ${email}`)
 
-    // Generate tokens
     const { token, refreshToken } = this.generateTokens(user)
-
-    // Save refresh token
     await this.saveRefreshToken(user.id, refreshToken)
 
-    // Return user without sensitive data
     const userData = {
       id: user.id,
       email: user.email,
@@ -126,7 +110,6 @@ export class AuthService {
   }
 
   async socialLogin(provider: string, providerId: string, email: string, name: string, image?: string): Promise<{ user: Partial<User>; token: string; refreshToken: string }> {
-    // Find or create user
     let user = await prisma.user.findFirst({
       where: {
         OR: [
@@ -137,7 +120,6 @@ export class AuthService {
     })
 
     if (!user) {
-      // Create new user
       user = await prisma.user.create({
         data: {
           email,
@@ -151,10 +133,7 @@ export class AuthService {
       logger.info(`New ${provider} user created: ${email}`)
     }
 
-    // Generate tokens
     const { token, refreshToken } = this.generateTokens(user)
-
-    // Save refresh token
     await this.saveRefreshToken(user.id, refreshToken)
 
     const userData = {
@@ -179,7 +158,6 @@ export class AuthService {
       throw new AppError('JWT_SECRET is not defined', 500)
     }
 
-    // Use the same JWT secret as Supabase for compatibility
     const token = jwt.sign(payload, jwtSecret as string, {
       expiresIn: process.env.JWT_EXPIRES_IN || '7d'
     } as jwt.SignOptions)
@@ -200,10 +178,8 @@ export class AuthService {
 
   async refreshAccessToken(refreshToken: string): Promise<{ token: string; refreshToken: string }> {
     try {
-      // Verify refresh token
       const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET!) as { id: string }
 
-      // Check if refresh token exists and is not revoked
       const storedToken = await prisma.refreshToken.findFirst({
         where: {
           token: refreshToken,
@@ -219,7 +195,6 @@ export class AuthService {
         throw new AppError('Invalid refresh token', 401)
       }
 
-      // Get user
       const user = await prisma.user.findUnique({
         where: { id: decoded.id },
         select: {
@@ -234,16 +209,13 @@ export class AuthService {
         throw new AppError('User not found', 401)
       }
 
-      // Generate new tokens
       const tokens = this.generateTokens(user)
 
-      // Revoke old refresh token
       await prisma.refreshToken.update({
         where: { id: storedToken.id },
         data: { revoked: true }
       })
 
-      // Save new refresh token
       await this.saveRefreshToken(user.id, tokens.refreshToken)
 
       return tokens
@@ -254,7 +226,7 @@ export class AuthService {
 
   async saveRefreshToken(userId: string, token: string): Promise<void> {
     const expiresAt = new Date()
-    expiresAt.setDate(expiresAt.getDate() + 30) // 30 days from now
+    expiresAt.setDate(expiresAt.getDate() + 30)
 
     await prisma.refreshToken.create({
       data: {
@@ -275,10 +247,9 @@ export class AuthService {
         revoked: true,
       }
     })
-    
-    // Optional: Sign out from Supabase
+
     await supabase.auth.signOut()
-    
+
     logger.info(`User logged out: ${userId}`)
   }
 
@@ -301,10 +272,9 @@ export class AuthService {
     return user
   }
 
-  // Optional: Sync user from Supabase to local database
   async syncSupabaseUser(supabaseUserId: string): Promise<void> {
     const { data: { user }, error } = await supabaseAdmin.auth.admin.getUserById(supabaseUserId)
-    
+
     if (error || !user) {
       throw new AppError('Supabase user not found', 404)
     }
@@ -339,16 +309,13 @@ export class AuthService {
     })
 
     if (!user) {
-      // Don't reveal if email exists for security
       return
     }
 
-    // Generate reset token
     const resetToken = crypto.randomBytes(32).toString('hex')
     const resetTokenHash = crypto.createHash('sha256').update(resetToken).digest('hex')
-    const resetTokenExpiry = new Date(Date.now() + 15 * 60 * 1000) // 15 minutes
+    const resetTokenExpiry = new Date(Date.now() + 15 * 60 * 1000)
 
-    // Save token hash to database
     await prisma.passwordReset.create({
       data: {
         userId: user.id,
@@ -357,14 +324,13 @@ export class AuthService {
       }
     })
 
-    // Send email with reset link
     const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}&email=${email}`
     await this.sendPasswordResetEmail(email, resetLink)
   }
 
   async resetPassword(email: string, token: string, newPassword: string): Promise<void> {
     const tokenHash = crypto.createHash('sha256').update(token).digest('hex')
-  
+
     const passwordReset = await prisma.passwordReset.findUnique({
       where: { token: tokenHash }
     })
@@ -381,10 +347,8 @@ export class AuthService {
       throw new AppError('Invalid reset request', 400)
     }
 
-    // Hash new password
     const hashedPassword = await bcrypt.hash(newPassword, 10)
 
-    // Update password and mark token as used
     await Promise.all([
       prisma.user.update({
         where: { id: user.id },
@@ -397,7 +361,7 @@ export class AuthService {
     ])
   }
 
-  private async sendPasswordResetEmail(email: string, resetLink: string): Promise<void> {
+  private async sendPasswordResetEmail(email: string, _resetLink: string): Promise<void> {
     // Implement your email sending logic here
     logger.info(`Password reset link sent to ${email}`)
   }

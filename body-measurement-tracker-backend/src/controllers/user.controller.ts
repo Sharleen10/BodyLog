@@ -1,5 +1,5 @@
 // controllers/user.controller.ts
-import { Request, Response, NextFunction } from 'express'
+import { Response, NextFunction } from 'express'
 import { UserService } from '../services/user.service'
 import { catchAsync } from '../utils/catchAsync'
 import { AppError } from '../utils/AppError'
@@ -12,7 +12,7 @@ const userService = UserService.getInstance()
 export const getProfile = catchAsync(async (
   req: AuthRequest,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ) => {
   const userId = req.user!.id
   const profile = await userService.getProfile(userId)
@@ -23,7 +23,7 @@ export const getProfile = catchAsync(async (
 export const updateProfile = catchAsync(async (
   req: AuthRequest,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ) => {
   const userId = req.user!.id
   const data: ProfileUpdateData = req.body
@@ -36,7 +36,7 @@ export const updateProfile = catchAsync(async (
 export const getGoals = catchAsync(async (
   req: AuthRequest,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ) => {
   const userId = req.user!.id
   const profile = await userService.getProfile(userId)
@@ -47,7 +47,7 @@ export const getGoals = catchAsync(async (
 export const updateGoals = catchAsync(async (
   req: AuthRequest,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ) => {
   const userId = req.user!.id
   const data: GoalsUpdateData = req.body
@@ -60,7 +60,7 @@ export const updateGoals = catchAsync(async (
 export const uploadProfileImage = catchAsync(async (
   req: AuthRequest & { file?: Express.Multer.File },
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ) => {
   const userId = req.user!.id
 
@@ -76,7 +76,7 @@ export const uploadProfileImage = catchAsync(async (
 export const deleteProfileImage = catchAsync(async (
   req: AuthRequest,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ) => {
   const userId = req.user!.id
 
@@ -88,7 +88,7 @@ export const deleteProfileImage = catchAsync(async (
 export const changePassword = catchAsync(async (
   req: AuthRequest,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ) => {
   const userId = req.user!.id
   const { currentPassword, newPassword } = req.body
@@ -108,7 +108,7 @@ export const changePassword = catchAsync(async (
 export const deleteAccount = catchAsync(async (
   req: AuthRequest,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ) => {
   const userId = req.user!.id
 
@@ -120,7 +120,7 @@ export const deleteAccount = catchAsync(async (
 export const getUserStats = catchAsync(async (
   req: AuthRequest,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ) => {
   const userId = req.user!.id
 

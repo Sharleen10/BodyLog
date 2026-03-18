@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import { AppError } from '../utils/AppError'
 import { logger } from '../utils/logger'
-import { Prisma } from '@prisma/client'
 import { PrismaClientKnownRequestError, PrismaClientValidationError } from '@prisma/client/runtime/library'
 import { constants } from '../config/constants'
 
@@ -9,10 +8,8 @@ export const errorHandler = (
   err: Error | AppError,
   req: Request,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ) => {
-  let error = err
-
   // Log error
   logger.error({
     message: err.message,
@@ -80,7 +77,7 @@ export const errorHandler = (
     ? 'Something went wrong'
     : err.message
 
-  res.status(statusCode).json({
+  return res.status(statusCode).json({
     success: false,
     message,
     ...(process.env.NODE_ENV === 'development' && { stack: err.stack }),
