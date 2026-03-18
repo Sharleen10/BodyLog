@@ -39,14 +39,14 @@ export function useProfile() {
         title: 'Success',
         description: 'Profile updated successfully',
       })
-      return { success: true }
+      return { success: true, data: response.data.data }
     } catch (err: any) {
       toast({
         title: 'Error',
         description: err.response?.data?.message || 'Failed to update profile',
         variant: 'destructive',
       })
-      return { success: false, error: err.response?.data?.message }
+      return { success: false, error: err.response?.data?.message, data: null }
     }
   }
 
@@ -55,19 +55,20 @@ export function useProfile() {
       const formData = new FormData()
       formData.append('image', file)
       const response = await userApi.uploadImage(formData)
-      setProfile(prev => prev ? { ...prev, image: response.data.data!.imageUrl } : null)
+      const imageUrl = response.data.data!.imageUrl
+      setProfile(prev => prev ? { ...prev, image: imageUrl } : null)
       toast({
         title: 'Success',
         description: 'Profile image updated successfully',
       })
-      return { success: true }
+      return { success: true, data: { imageUrl } }
     } catch (err: any) {
       toast({
         title: 'Error',
         description: err.response?.data?.message || 'Failed to upload image',
         variant: 'destructive',
       })
-      return { success: false, error: err.response?.data?.message }
+      return { success: false, error: err.response?.data?.message, data: null }
     }
   }
 
@@ -79,14 +80,14 @@ export function useProfile() {
         title: 'Success',
         description: 'Profile image removed successfully',
       })
-      return { success: true }
+      return { success: true, data: null }
     } catch (err: any) {
       toast({
         title: 'Error',
         description: err.response?.data?.message || 'Failed to delete image',
         variant: 'destructive',
       })
-      return { success: false, error: err.response?.data?.message }
+      return { success: false, error: err.response?.data?.message, data: null }
     }
   }
 
@@ -97,14 +98,14 @@ export function useProfile() {
         title: 'Success',
         description: 'Password changed successfully',
       })
-      return { success: true }
+      return { success: true, data: null }
     } catch (err: any) {
       toast({
         title: 'Error',
         description: err.response?.data?.message || 'Failed to change password',
         variant: 'destructive',
       })
-      return { success: false, error: err.response?.data?.message }
+      return { success: false, error: err.response?.data?.message, data: null }
     }
   }
 

@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { signIn } from 'next-auth/react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { registerSchema } from '@/lib/utils/validation'
@@ -35,19 +36,34 @@ export default function RegisterForm() {
   const onSubmit = async (data: RegisterFormData) => {
     setIsLoading(true)
     try {
-      const response = await authApi.register(data.name, data.email, data.password)
-      const { token, refreshToken, user } = response.data.data!
-      
-      localStorage.setItem('token', token)
-      localStorage.setItem('refreshToken', refreshToken)
-      
-      toast({
-        title: 'Welcome!',
-        description: `Account created for ${user.name}`,
+      // First register the user via API
+      await authApi.register(data.name, data.email, data.password)
+
+      // Then sign in with NextAuth
+      const result = await signIn('credentials', {
+        email: data.email,
+        password: data.password,
+        redirect: false,
       })
-      
-      router.push('/dashboard')
-      router.refresh()
+
+      if (result?.error) {
+        toast({
+          title: 'Error',
+          description: 'Account created but failed to sign in. Please log in manually.',
+          variant: 'destructive',
+        })
+        router.push('/login')
+        return
+      }
+
+      if (result?.ok) {
+        toast({
+          title: 'Welcome!',
+          description: `Account created for ${data.name}`,
+        })
+        router.push('/dashboard')
+        router.refresh()
+      }
     } catch (error: any) {
       toast({
         title: 'Error',
@@ -98,12 +114,7 @@ export default function RegisterForm() {
             error={errors.confirmPassword?.message}
             {...register('confirmPassword')}
           />
-
-          <Button
-            type="submit"
-            className="w-full"
-            isLoading={isLoading}
-          >
+          <Button type="submit" className="w-full" isLoading={isLoading}>
             Sign Up
           </Button>
         </form>
@@ -111,10 +122,7 @@ export default function RegisterForm() {
       <CardFooter className="flex justify-center">
         <p className="text-sm text-muted-foreground">
           Already have an account?{' '}
-          <Link
-            href="/login"
-            className="text-primary hover:underline font-medium"
-          >
+          <Link href="/login" className="text-primary hover:underline font-medium">
             Sign in
           </Link>
         </p>
