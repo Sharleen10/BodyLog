@@ -6,3 +6,246 @@
 2026-03-18 14:21:48 [INFO]: SIGINT signal received: closing HTTP server 
 2026-03-18 14:21:48 [INFO]: HTTP server closed 
 2026-03-18 14:21:48 [INFO]: Database disconnected 
+2026-03-18 21:24:22 [INFO]: ✅ Database connected successfully via Prisma 
+2026-03-18 21:24:23 [INFO]: ✅ Supabase client initialized successfully 
+2026-03-18 21:24:23 [INFO]: 🚀 Server running on port 5000 in development mode 
+2026-03-18 21:24:23 [INFO]: 📝 API available at http://localhost:5000/api 
+2026-03-18 21:24:23 [INFO]: 🔍 Health check at http://localhost:5000/health 
+2026-03-18 21:27:54 [ERROR]: Supabase user creation error: fetch failed 
+AuthRetryableFetchError: fetch failed
+    at _handleRequest (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\@supabase\auth-js\src\lib\fetch.ts:191:11)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async _request (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\@supabase\auth-js\src\lib\fetch.ts:157:16)
+    at async GoTrueAdminApi.createUser (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\@supabase\auth-js\src\GoTrueAdminApi.ts:210:14)
+    at async AuthService.register (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\src\services\auth.service.ts:31:50)
+    at async C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\src\controllers\auth.controller.ts:26:18
+2026-03-18 21:27:56 [INFO]: New user registered: jane@gmail.com 
+2026-03-18 21:32:41 [INFO]: SIGINT signal received: closing HTTP server 
+2026-03-18 21:32:41 [INFO]: HTTP server closed 
+2026-03-18 21:32:41 [INFO]: Database disconnected 
+2026-03-18 21:35:13 [INFO]: ✅ Database connected successfully via Prisma 
+2026-03-18 21:35:13 [INFO]: ✅ Supabase client initialized successfully 
+2026-03-18 21:35:13 [INFO]: 🚀 Server running on port 5000 in development mode 
+2026-03-18 21:35:13 [INFO]: 📝 API available at http://localhost:5000/api 
+2026-03-18 21:35:13 [INFO]: 🔍 Health check at http://localhost:5000/health 
+2026-03-18 21:39:15 [ERROR]: Supabase user creation error: fetch failed 
+AuthRetryableFetchError: fetch failed
+    at _handleRequest (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\@supabase\auth-js\src\lib\fetch.ts:191:11)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async _request (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\@supabase\auth-js\src\lib\fetch.ts:157:16)
+    at async GoTrueAdminApi.createUser (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\@supabase\auth-js\src\GoTrueAdminApi.ts:210:14)
+    at async AuthService.register (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\src\services\auth.service.ts:31:50)
+    at async C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\src\controllers\auth.controller.ts:26:18
+2026-03-18 21:39:17 [INFO]: New user registered: ban@gmail.com 
+2026-03-18 21:48:35 [INFO]: SIGINT signal received: closing HTTP server 
+2026-03-18 21:48:35 [INFO]: HTTP server closed 
+2026-03-18 21:48:35 [INFO]: Database disconnected 
+2026-03-18 21:50:27 [INFO]: ✅ Database connected successfully via Prisma 
+2026-03-18 21:50:27 [INFO]: ✅ Supabase client initialized successfully 
+2026-03-18 21:50:27 [INFO]: 🚀 Server running on port 5000 in development mode 
+2026-03-18 21:50:27 [INFO]: 📝 API available at http://localhost:5000/api 
+2026-03-18 21:50:27 [INFO]: 🔍 Health check at http://localhost:5000/health 
+2026-03-18 21:50:36 [ERROR]: 
+[31mInvalid [1m`prisma.user.findUnique()`[22m invocation in[39m
+[4mC:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\src\services\auth.service.ts:70:36[24m
+
+  [2m[90m67[39m [34m}[39m[22m
+  [2m[90m68[39m [22m
+  [2m[90m69[39m [36masync[39m [36mlogin[39m[34m([39memail[34m:[39m string[34m,[39m password[34m:[39m string[34m)[39m[34m:[39m Promise<[34m{[39m user[34m:[39m Partial<User>[34m;[39m token[34m:[39m string[34m;[39m refreshToken[34m:[39m string [34m}[39m> [34m{[39m[22m
+[1m[31m→[39m[22m [2m[90m70[39m   [36mconst[39m user = [36mawait[39m prisma[34m.[39muser[34m.[39m[36mfindUnique[39m[34m([39m[22m
+Error occurred during query execution:
+ConnectorError(ConnectorError { user_facing_error: None, kind: QueryError(PostgresError { code: "42P05", message: "prepared statement \"s0\" already exists", severity: "ERROR", detail: None, column: None, hint: None }), transient: false }) 
+PrismaClientUnknownRequestError: 
+[31mInvalid [1m`prisma.user.findUnique()`[22m invocation in[39m
+[4mC:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\src\services\auth.service.ts:70:36[24m
+
+  [2m[90m67[39m [34m}[39m[22m
+  [2m[90m68[39m [22m
+  [2m[90m69[39m [36masync[39m [36mlogin[39m[34m([39memail[34m:[39m string[34m,[39m password[34m:[39m string[34m)[39m[34m:[39m Promise<[34m{[39m user[34m:[39m Partial<User>[34m;[39m token[34m:[39m string[34m;[39m refreshToken[34m:[39m string [34m}[39m> [34m{[39m[22m
+[1m[31m→[39m[22m [2m[90m70[39m   [36mconst[39m user = [36mawait[39m prisma[34m.[39muser[34m.[39m[36mfindUnique[39m[34m([39m[22m
+Error occurred during query execution:
+ConnectorError(ConnectorError { user_facing_error: None, kind: QueryError(PostgresError { code: "42P05", message: "prepared statement \"s0\" already exists", severity: "ERROR", detail: None, column: None, hint: None }), transient: false })
+    at ei.handleRequestError (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\@prisma\client\src\runtime\RequestHandler.ts:237:13)
+    at ei.handleAndLogRequestError (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\@prisma\client\src\runtime\RequestHandler.ts:174:12)
+    at ei.request (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\@prisma\client\src\runtime\RequestHandler.ts:143:12)
+    at async a (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\@prisma\client\src\runtime\getPrismaClient.ts:833:24)
+    at async AuthService.login (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\src\services\auth.service.ts:70:18)
+    at async C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\src\controllers\auth.controller.ts:42:18
+2026-03-18 21:54:18 [INFO]: SIGINT signal received: closing HTTP server 
+2026-03-18 21:54:18 [INFO]: HTTP server closed 
+2026-03-18 21:54:18 [INFO]: Database disconnected 
+2026-03-18 21:55:16 [INFO]: ✅ Database connected successfully via Prisma 
+2026-03-18 21:55:16 [INFO]: ✅ Supabase client initialized successfully 
+2026-03-18 21:55:16 [INFO]: 🚀 Server running on port 5000 in development mode 
+2026-03-18 21:55:16 [INFO]: 📝 API available at http://localhost:5000/api 
+2026-03-18 21:55:16 [INFO]: 🔍 Health check at http://localhost:5000/health 
+2026-03-18 22:05:17 [WARN]: Supabase auth warning: 
+2026-03-18 22:05:17 [INFO]: User logged in: ban@gmail.com 
+2026-03-18 22:05:34 [WARN]: Supabase auth warning: 
+2026-03-18 22:05:34 [INFO]: User logged in: ban@gmail.com 
+2026-03-18 22:12:50 [WARN]: Supabase auth warning: 
+2026-03-18 22:12:50 [INFO]: User logged in: ban@gmail.com 
+2026-03-18 22:13:04 [ERROR]: Please authenticate 
+Error: Please authenticate
+    at C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\src\middlewares\auth.middleware.ts:13:19
+    at allFailed (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\passport\lib\middleware\authenticate.js:110:18)
+    at attempt (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\passport\lib\middleware\authenticate.js:183:28)
+    at JwtStrategy.strategy.fail (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\passport\lib\middleware\authenticate.js:314:9)
+    at C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\passport-jwt\lib\strategy.js:106:33
+    at C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\jsonwebtoken\verify.js:171:14
+    at getSecret (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\jsonwebtoken\verify.js:97:14)
+    at Object.module.exports [as verify] (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\jsonwebtoken\verify.js:101:10)
+    at Function.module.exports [as JwtVerifier] (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\passport-jwt\lib\verify_jwt.js:4:16)
+    at C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\passport-jwt\lib\strategy.js:104:25
+2026-03-18 22:18:45 [INFO]: ✅ Database connected successfully via Prisma 
+2026-03-18 22:18:45 [INFO]: ✅ Supabase client initialized successfully 
+2026-03-18 22:18:45 [INFO]: 🚀 Server running on port 5000 in development mode 
+2026-03-18 22:18:45 [INFO]: 📝 API available at http://localhost:5000/api 
+2026-03-18 22:18:45 [INFO]: 🔍 Health check at http://localhost:5000/health 
+2026-03-18 22:19:22 [INFO]: ✅ Database connected successfully via Prisma 
+2026-03-19 08:55:52 [INFO]: ✅ Database connected successfully via Prisma 
+2026-03-19 08:55:52 [INFO]: ✅ Supabase client initialized successfully 
+2026-03-19 08:55:52 [INFO]: 🚀 Server running on port 5000 in development mode 
+2026-03-19 08:55:52 [INFO]: 📝 API available at http://localhost:5000/api 
+2026-03-19 08:55:52 [INFO]: 🔍 Health check at http://localhost:5000/health 
+2026-03-19 08:56:29 [WARN]: Supabase auth warning: 
+2026-03-19 08:56:29 [INFO]: User logged in: jane@gmail.com 
+2026-03-19 08:56:32 [ERROR]: Please authenticate 
+Error: Please authenticate
+    at C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\src\middlewares\auth.middleware.ts:13:19
+    at allFailed (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\passport\lib\middleware\authenticate.js:110:18)
+    at attempt (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\passport\lib\middleware\authenticate.js:183:28)
+    at JwtStrategy.strategy.fail (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\passport\lib\middleware\authenticate.js:314:9)
+    at JwtStrategy.authenticate (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\passport-jwt\lib\strategy.js:96:21)
+    at attempt (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\passport\lib\middleware\authenticate.js:378:16)
+    at authenticate (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\passport\lib\middleware\authenticate.js:379:7)
+    at authenticate (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\src\middlewares\auth.middleware.ts:18:5)
+    at Layer.handle [as handle_request] (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\express\lib\router\index.js:328:13)
+2026-03-19 08:56:32 [ERROR]: Please authenticate 
+Error: Please authenticate
+    at C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\src\middlewares\auth.middleware.ts:13:19
+    at allFailed (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\passport\lib\middleware\authenticate.js:110:18)
+    at attempt (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\passport\lib\middleware\authenticate.js:183:28)
+    at JwtStrategy.strategy.fail (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\passport\lib\middleware\authenticate.js:314:9)
+    at JwtStrategy.authenticate (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\passport-jwt\lib\strategy.js:96:21)
+    at attempt (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\passport\lib\middleware\authenticate.js:378:16)
+    at authenticate (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\passport\lib\middleware\authenticate.js:379:7)
+    at authenticate (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\src\middlewares\auth.middleware.ts:18:5)
+    at Layer.handle [as handle_request] (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\express\lib\router\index.js:328:13)
+2026-03-19 09:16:11 [INFO]: ✅ Database connected successfully via Prisma 
+2026-03-19 09:16:11 [INFO]: ✅ Supabase client initialized successfully 
+2026-03-19 09:16:11 [INFO]: 🚀 Server running on port 5000 in development mode 
+2026-03-19 09:16:12 [INFO]: 📝 API available at http://localhost:5000/api 
+2026-03-19 09:16:12 [INFO]: 🔍 Health check at http://localhost:5000/health 
+2026-03-19 09:18:29 [WARN]: Supabase auth warning: 
+2026-03-19 09:18:29 [INFO]: User logged in: ban@gmail.com 
+2026-03-19 09:21:15 [INFO]: Profile updated for user: cmmwg330y0000un0s5qt2ttfb 
+2026-03-19 09:25:57 [ERROR]: Measurement not found 
+Error: Measurement not found
+    at MeasurementService.getMeasurementById (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\src\services\measurement.service.ts:84:13)
+    at async MeasurementService.updateMeasurement (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\src\services\measurement.service.ts:95:25)
+    at async C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\src\controllers\measurement.controller.ts:80:23
+2026-03-19 09:29:13 [INFO]: Profile image uploaded for user: cmmwg330y0000un0s5qt2ttfb 
+2026-03-19 09:29:53 [INFO]: Profile updated for user: cmmwg330y0000un0s5qt2ttfb 
+2026-03-19 09:30:12 [INFO]: Profile updated for user: cmmwg330y0000un0s5qt2ttfb 
+2026-03-19 09:32:41 [WARN]: Supabase auth warning: 
+2026-03-19 09:32:41 [INFO]: User logged in: jane@gmail.com 
+2026-03-19 09:34:10 [INFO]: SIGINT signal received: closing HTTP server 
+2026-03-19 09:34:10 [INFO]: HTTP server closed 
+2026-03-19 09:34:10 [INFO]: Database disconnected 
+2026-03-19 09:49:16 [INFO]: ✅ Database connected successfully via Prisma 
+2026-03-19 09:49:16 [INFO]: ✅ Supabase client initialized successfully 
+2026-03-19 09:49:16 [INFO]: 🚀 Server running on port 5000 in development mode 
+2026-03-19 09:49:16 [INFO]: 📝 API available at http://localhost:5000/api 
+2026-03-19 09:49:16 [INFO]: 🔍 Health check at http://localhost:5000/health 
+2026-03-19 09:50:05 [WARN]: Supabase auth warning: 
+2026-03-19 09:50:05 [INFO]: User logged in: jane@gmail.com 
+2026-03-19 09:53:08 [INFO]: Measurement created for user: cmmwfoh8l0000unzcuqacg42e 
+2026-03-19 09:57:19 [WARN]: Supabase auth warning: 
+2026-03-19 09:57:19 [INFO]: User logged in: ban@gmail.com 
+2026-03-19 09:58:40 [INFO]: Measurement created for user: cmmwg330y0000un0s5qt2ttfb 
+2026-03-19 10:00:44 [INFO]: Profile updated for user: cmmwg330y0000un0s5qt2ttfb 
+2026-03-19 10:19:33 [INFO]: SIGINT signal received: closing HTTP server 
+2026-03-19 10:19:33 [INFO]: HTTP server closed 
+2026-03-19 10:19:33 [INFO]: Database disconnected 
+2026-03-19 10:31:30 [INFO]: ✅ Database connected successfully via Prisma 
+2026-03-19 10:31:30 [INFO]: ✅ Supabase client initialized successfully 
+2026-03-19 10:31:30 [INFO]: 🚀 Server running on port 5000 in development mode 
+2026-03-19 10:31:30 [INFO]: 📝 API available at http://localhost:5000/api 
+2026-03-19 10:31:30 [INFO]: 🔍 Health check at http://localhost:5000/health 
+2026-03-19 10:33:38 [ERROR]: Please authenticate 
+Error: Please authenticate
+    at C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\src\middlewares\auth.middleware.ts:13:19
+    at allFailed (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\passport\lib\middleware\authenticate.js:110:18)
+    at attempt (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\passport\lib\middleware\authenticate.js:183:28)
+    at JwtStrategy.strategy.fail (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\passport\lib\middleware\authenticate.js:314:9)
+    at JwtStrategy.authenticate (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\passport-jwt\lib\strategy.js:96:21)
+    at attempt (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\passport\lib\middleware\authenticate.js:378:16)
+    at authenticate (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\passport\lib\middleware\authenticate.js:379:7)
+    at authenticate (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\src\middlewares\auth.middleware.ts:18:5)
+    at Layer.handle [as handle_request] (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\express\lib\router\index.js:328:13)
+2026-03-19 10:33:57 [WARN]: Supabase auth warning: 
+2026-03-19 10:33:57 [INFO]: User logged in: jane@gmail.com 
+2026-03-19 10:36:36 [INFO]: Measurement created for user: cmmwfoh8l0000unzcuqacg42e 
+2026-03-19 10:36:38 [INFO]: Measurement created for user: cmmwfoh8l0000unzcuqacg42e 
+2026-03-19 10:36:54 [INFO]: Measurement deleted: cmmx7uozn0003unjss27cn55v 
+2026-03-19 10:39:41 [INFO]: Profile updated for user: cmmwfoh8l0000unzcuqacg42e 
+2026-03-19 10:51:11 [INFO]: Profile updated for user: cmmwfoh8l0000unzcuqacg42e 
+2026-03-19 10:57:02 [ERROR]: Please authenticate 
+Error: Please authenticate
+    at C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\src\middlewares\auth.middleware.ts:13:19
+    at allFailed (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\passport\lib\middleware\authenticate.js:110:18)
+    at attempt (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\passport\lib\middleware\authenticate.js:183:28)
+    at JwtStrategy.strategy.fail (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\passport\lib\middleware\authenticate.js:314:9)
+    at JwtStrategy.authenticate (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\passport-jwt\lib\strategy.js:96:21)
+    at attempt (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\passport\lib\middleware\authenticate.js:378:16)
+    at authenticate (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\passport\lib\middleware\authenticate.js:379:7)
+    at authenticate (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\src\middlewares\auth.middleware.ts:18:5)
+    at Layer.handle [as handle_request] (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\express\lib\router\index.js:328:13)
+2026-03-19 10:58:02 [WARN]: Supabase auth warning: 
+2026-03-19 10:58:02 [INFO]: User logged in: ban@gmail.com 
+2026-03-19 10:58:56 [ERROR]: Please authenticate 
+Error: Please authenticate
+    at C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\src\middlewares\auth.middleware.ts:13:19
+    at allFailed (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\passport\lib\middleware\authenticate.js:110:18)
+    at attempt (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\passport\lib\middleware\authenticate.js:183:28)
+    at JwtStrategy.strategy.fail (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\passport\lib\middleware\authenticate.js:314:9)
+    at JwtStrategy.authenticate (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\passport-jwt\lib\strategy.js:96:21)
+    at attempt (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\passport\lib\middleware\authenticate.js:378:16)
+    at authenticate (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\passport\lib\middleware\authenticate.js:379:7)
+    at authenticate (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\src\middlewares\auth.middleware.ts:18:5)
+    at Layer.handle [as handle_request] (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\express\lib\router\index.js:328:13)
+2026-03-19 10:59:03 [WARN]: Supabase auth warning: 
+2026-03-19 10:59:03 [INFO]: User logged in: jane@gmail.com 
+2026-03-19 11:00:44 [INFO]: SIGINT signal received: closing HTTP server 
+2026-03-19 11:00:44 [INFO]: HTTP server closed 
+2026-03-19 11:00:44 [INFO]: Database disconnected 
+2026-03-19 11:17:22 [INFO]: ✅ Database connected successfully via Prisma 
+2026-03-19 11:17:22 [INFO]: ✅ Supabase client initialized successfully 
+2026-03-19 11:17:22 [INFO]: 🚀 Server running on port 5000 in development mode 
+2026-03-19 11:17:22 [INFO]: 📝 API available at http://localhost:5000/api 
+2026-03-19 11:17:22 [INFO]: 🔍 Health check at http://localhost:5000/health 
+2026-03-19 11:18:03 [ERROR]: Please authenticate 
+Error: Please authenticate
+    at C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\src\middlewares\auth.middleware.ts:13:19
+    at allFailed (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\passport\lib\middleware\authenticate.js:110:18)
+    at attempt (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\passport\lib\middleware\authenticate.js:183:28)
+    at JwtStrategy.strategy.fail (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\passport\lib\middleware\authenticate.js:314:9)
+    at JwtStrategy.authenticate (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\passport-jwt\lib\strategy.js:96:21)
+    at attempt (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\passport\lib\middleware\authenticate.js:378:16)
+    at authenticate (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\passport\lib\middleware\authenticate.js:379:7)
+    at authenticate (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\src\middlewares\auth.middleware.ts:18:5)
+    at Layer.handle [as handle_request] (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (C:\Users\Sharleen\Desktop\body-measurement-tracker\body-measurement-tracker-backend\node_modules\express\lib\router\index.js:328:13)
+2026-03-19 11:18:27 [WARN]: Supabase auth warning: 
+2026-03-19 11:18:27 [INFO]: User logged in: jane@gmail.com 
+2026-03-19 11:19:29 [INFO]: Fitness goals updated for user: cmmwfoh8l0000unzcuqacg42e 
+2026-03-19 11:19:29 [INFO]: Profile updated for user: cmmwfoh8l0000unzcuqacg42e 
+2026-03-19 11:24:52 [INFO]: SIGINT signal received: closing HTTP server 
+2026-03-19 11:24:52 [INFO]: HTTP server closed 
+2026-03-19 11:24:52 [INFO]: Database disconnected 
