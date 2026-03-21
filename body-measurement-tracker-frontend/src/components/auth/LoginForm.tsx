@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import { signIn } from 'next-auth/react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -19,7 +19,6 @@ type LoginFormData = {
 }
 
 export default function LoginForm() {
-  const router = useRouter()
   const searchParams = useSearchParams()
   const { toast } = useToast()
   const [isLoading, setIsLoading] = useState(false)
@@ -44,9 +43,7 @@ export default function LoginForm() {
       if (result?.error) {
         toast({
           title: 'Error',
-          description: result.error === 'CredentialsSignin'
-            ? 'Invalid email or password'
-            : result.error,
+          description: 'Invalid email or password',
           variant: 'destructive',
         })
         return
@@ -57,9 +54,9 @@ export default function LoginForm() {
           title: 'Welcome back!',
           description: 'Logged in successfully',
         })
+        // Force full page reload so NextAuth session is picked up
         const from = searchParams.get('from') || '/dashboard'
-        router.push(from)
-        router.refresh()
+        window.location.href = from
       }
     } catch (error: any) {
       toast({

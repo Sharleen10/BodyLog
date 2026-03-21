@@ -52,10 +52,15 @@ const handler = NextAuth({
         }
 
         try {
+          console.log('🔐 Attempting login for:', credentials.email)
+          console.log('🌐 API URL:', process.env.NEXT_PUBLIC_API_URL)
+
           const response = await api.post('/auth/login', {
             email: credentials.email,
             password: credentials.password
           })
+
+          console.log('✅ Login response:', JSON.stringify(response.data))
 
           const { user, token, refreshToken } = response.data.data
 
@@ -72,6 +77,7 @@ const handler = NextAuth({
 
           return null
         } catch (error: any) {
+          console.error('❌ Login error:', error.response?.data || error.message)
           throw new Error(error.response?.data?.message || 'Authentication failed')
         }
       }
@@ -104,12 +110,13 @@ const handler = NextAuth({
   },
   session: {
     strategy: 'jwt',
-    maxAge: 30 * 24 * 60 * 60, // 30 days
+    maxAge: 30 * 24 * 60 * 60,
   },
   jwt: {
-    maxAge: 30 * 24 * 60 * 60, // 30 days
+    maxAge: 30 * 24 * 60 * 60,
   },
   secret: process.env.NEXTAUTH_SECRET,
+  debug: process.env.NODE_ENV === 'development',
 })
 
 export { handler as GET, handler as POST }

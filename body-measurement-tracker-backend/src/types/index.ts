@@ -20,6 +20,13 @@ export interface ProfileUpdateData {
   name?: string
   email?: string
   image?: string
+  fitnessGoals?: {
+    targetWeight?: number | null
+    targetBodyFat?: number | null
+    startDate?: Date | string | null
+    targetDate?: Date | string | null
+    notes?: string | null
+  }
 }
 
 export interface FitnessGoals {
@@ -33,11 +40,11 @@ export interface FitnessGoals {
 }
 
 export interface GoalsUpdateData {
-  targetWeight?: number
-  targetBodyFat?: number
-  startDate?: Date
-  targetDate?: Date
-  notes?: string
+  targetWeight?: number | null
+  targetBodyFat?: number | null
+  startDate?: Date | string | null
+  targetDate?: Date | string | null
+  notes?: string | null
 }
 
 /** ----------------------

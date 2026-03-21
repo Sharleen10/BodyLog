@@ -1,7 +1,7 @@
 // services/user.service.ts
 import prisma from '../config/database'
 import { AppError } from '../utils/AppError'
-import { ProfileUpdateData, FitnessGoals, User } from '../types'
+import { ProfileUpdateData, FitnessGoals, GoalsUpdateData, User } from '../types'
 import { logger } from '../utils/logger'
 import bcrypt from 'bcryptjs'
 import fs from 'fs'
@@ -43,7 +43,10 @@ export class UserService {
   }
 
   async updateProfile(userId: string, data: ProfileUpdateData): Promise<User> {
-    const user = await prisma.user.findUnique({ where: { id: userId } })
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: { fitnessGoals: true },
+    })
     if (!user) throw new AppError('User not found', 404)
 
     if (data.email && data.email !== user.email) {
@@ -54,8 +57,8 @@ export class UserService {
     const updatedUser = await prisma.user.update({
       where: { id: userId },
       data: {
-        name: data.name,
-        email: data.email,
+        ...(data.name && { name: data.name }),
+        ...(data.email && { email: data.email }),
       },
       select: {
         id: true,
@@ -66,14 +69,43 @@ export class UserService {
         emailVerified: true,
         createdAt: true,
         updatedAt: true,
+        fitnessGoals: true,
       },
     })
+
+    if (data.fitnessGoals) {
+      const goals = data.fitnessGoals
+      if (user.fitnessGoals) {
+        await prisma.fitnessGoals.update({
+          where: { userId },
+          data: {
+            targetWeight: goals.targetWeight ?? null,
+            targetBodyFat: goals.targetBodyFat ?? null,
+            startDate: goals.startDate ? new Date(goals.startDate) : null,
+            targetDate: goals.targetDate ? new Date(goals.targetDate) : null,
+            notes: goals.notes ?? null,
+          },
+        })
+      } else {
+        await prisma.fitnessGoals.create({
+          data: {
+            userId,
+            targetWeight: goals.targetWeight ?? null,
+            targetBodyFat: goals.targetBodyFat ?? null,
+            startDate: goals.startDate ? new Date(goals.startDate) : null,
+            targetDate: goals.targetDate ? new Date(goals.targetDate) : null,
+            notes: goals.notes ?? null,
+          },
+        })
+      }
+      logger.info(`Fitness goals updated for user: ${userId}`)
+    }
 
     logger.info(`Profile updated for user: ${userId}`)
     return updatedUser
   }
 
-  async updateGoals(userId: string, goals: Partial<FitnessGoals>): Promise<FitnessGoals> {
+  async updateGoals(userId: string, goals: GoalsUpdateData): Promise<FitnessGoals> {
     const user = await prisma.user.findUnique({
       where: { id: userId },
       include: { fitnessGoals: true },
@@ -85,22 +117,22 @@ export class UserService {
       updatedGoals = await prisma.fitnessGoals.update({
         where: { userId },
         data: {
-          targetWeight: goals.targetWeight,
-          targetBodyFat: goals.targetBodyFat,
-          startDate: goals.startDate,
-          targetDate: goals.targetDate,
-          notes: goals.notes,
+          targetWeight: goals.targetWeight ?? null,
+          targetBodyFat: goals.targetBodyFat ?? null,
+          startDate: goals.startDate ? new Date(goals.startDate) : null,
+          targetDate: goals.targetDate ? new Date(goals.targetDate) : null,
+          notes: goals.notes ?? null,
         },
       })
     } else {
       updatedGoals = await prisma.fitnessGoals.create({
         data: {
           userId,
-          targetWeight: goals.targetWeight,
-          targetBodyFat: goals.targetBodyFat,
-          startDate: goals.startDate,
-          targetDate: goals.targetDate,
-          notes: goals.notes,
+          targetWeight: goals.targetWeight ?? null,
+          targetBodyFat: goals.targetBodyFat ?? null,
+          startDate: goals.startDate ? new Date(goals.startDate) : null,
+          targetDate: goals.targetDate ? new Date(goals.targetDate) : null,
+          notes: goals.notes ?? null,
         },
       })
     }
@@ -159,7 +191,6 @@ export class UserService {
     const hashedPassword = await bcrypt.hash(newPassword, 12)
     await prisma.user.update({ where: { id: userId }, data: { password: hashedPassword } })
 
-    // Revoke all active refresh tokens
     await prisma.refreshToken.updateMany({ where: { userId, revoked: false }, data: { revoked: true } })
 
     logger.info(`Password changed for user: ${userId}`)
